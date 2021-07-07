@@ -46,8 +46,17 @@ namespace FlightBookingProblem
                     string[] passengerSegments = enteredText.Split(' ');
                     _scheduledFlight.AddPassenger(new AirlineEmployee
                     {
-                        name = passengerSegments[2], 
+                        name = passengerSegments[2],
                         age = Convert.ToInt32(passengerSegments[3]),
+                    });
+                }
+                else if (enteredText.Contains("add discount"))
+                {
+                    string[] passengerSegments = enteredText.Split(' ');
+                    _scheduledFlight.AddPassenger(new Discounted
+                    {
+                        name = passengerSegments[2],
+                        age = Convert.ToInt32(passengerSegments[3])
                     });
                 }
                 else if (enteredText.Contains("exit"))

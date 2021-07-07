@@ -36,7 +36,7 @@
             this.isUsingLoyaltyPoints = isUsingLoyaltyPoints;
         }
         public Loyalty() : base() {
-            base.allowedBags = 2;
+            base.allowedBags = 2; //loyalty passengers are allowed an additional bag
         }
     }
 
@@ -45,5 +45,14 @@
         //constructors
         public AirlineEmployee(string name, int age) : base(name, age) { }
         public AirlineEmployee() : base() { }
+    }
+
+    public class Discounted : Passenger
+    {
+        //constructors
+        public Discounted(string name, int age) : base(name, age) { }
+        public Discounted() : base() {
+            base.allowedBags = 0; //discounted passengers are not allowed any bags
+        }
     }
 }
