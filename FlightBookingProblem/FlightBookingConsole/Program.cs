@@ -22,12 +22,13 @@ namespace FlightBookingProblem
                 {
                     case "add":
                         {
+                            Passenger p = default(Passenger);
                             //section command section (ex. add *general* ...)
                             switch (command[1])
                             {
                                 case "general":
                                     {
-                                        General p = new General
+                                        p = new General
                                         {
                                             name = command[2],
                                             age = Convert.ToInt32(command[3])
@@ -36,7 +37,7 @@ namespace FlightBookingProblem
                                     }
                                 case "loyalty":
                                     {
-                                        Loyalty p = new Loyalty
+                                        p = new Loyalty
                                         {
                                             name = command[2],
                                             age = Convert.ToInt32(command[3]),
@@ -47,7 +48,7 @@ namespace FlightBookingProblem
                                     }
                                 case "airline":
                                     {
-                                        AirlineEmployee p = new AirlineEmployee
+                                        p = new AirlineEmployee
                                         {
                                             name = command[2],
                                             age = Convert.ToInt32(command[3])
@@ -56,7 +57,7 @@ namespace FlightBookingProblem
                                     }
                                 case "discount":
                                     {
-                                        Discounted p = new Discounted
+                                        p = new Discounted
                                         {
                                             name = command[2],
                                             age = Convert.ToInt32(command[3])
@@ -69,6 +70,7 @@ namespace FlightBookingProblem
                                         break;
                                     }
                             }
+                            if (p != null) _scheduledFlight.AddPassenger(p);
                             break;
                         }
                     //provides expansion for printing other values
@@ -126,7 +128,7 @@ namespace FlightBookingProblem
                 MinimumTakeOffPercentage = 0.7
             };
 
-            _scheduledFlight = new ScheduledFlight(londonToParis);
+            _scheduledFlight = new ScheduledFlight(londonToParis, ScheduledFlight.Ruleset.Relaxed);
 
             _scheduledFlight.SetAircraftForRoute(
                 new Plane { Id = 123, Name = "Antonov AN-2", NumberOfSeats = 12 });
