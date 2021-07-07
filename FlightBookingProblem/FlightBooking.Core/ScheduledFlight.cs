@@ -7,6 +7,12 @@ namespace FlightBooking.Core
 {
     public class ScheduledFlight
     {
+        enum Rulesets
+        {
+            Default,
+            Relaxed
+        }
+
         public ScheduledFlight(FlightRoute flightRoute)
         {
             FlightRoute = flightRoute;
@@ -74,7 +80,6 @@ namespace FlightBooking.Core
 
             //prequesite values 
             double profitSurplus = profitFromFlight - costOfFlight;
-            bool proceed = profitSurplus > 0 && seatsTaken < Aircraft.NumberOfSeats && seatsTaken / (double)Aircraft.NumberOfSeats > FlightRoute.MinimumTakeOffPercentage;
 
             //result formatting
             StringBuilder result = new StringBuilder("Flight summary for " + FlightRoute.Title);
@@ -96,9 +101,37 @@ namespace FlightBooking.Core
                 .AppendLine("Total loyalty points given away: " + totalLoyaltyPointsAccrued)
                 .AppendLine("Total loyalty points redeemed: " + totalLoyaltyPointsRedeemed)
                 .AppendLine()
-                .Append(proceed ? "THIS FLIGHT MAY PROCEED" : "FLIGHT MAY NOT PROCEED");
+                .Append(meetsFlightRules(profitSurplus, seatsTaken) ? "THIS FLIGHT MAY PROCEED" : "FLIGHT MAY NOT PROCEED");
 
             return result.ToString();
+        }
+
+
+        private bool meetsFlightRules(double profitSurplus, int seatsTaken, Rulesets ruleset = Rulesets.Default)
+        {
+            bool profitable = profitSurplus > 0; //the revenue generated from the flight must exceed the cost of the flight 
+            bool seatsAvailable = seatsTaken < Aircraft.NumberOfSeats; //the number of passengers cannot exceed the amount of seats on the plane
+            bool minimumPassengersReached = seatsTaken / (double)Aircraft.NumberOfSeats > FlightRoute.MinimumTakeOffPercentage; //the aircraft must have a minimum percentage of passengers booked for that route
+
+            bool result = false;
+            //They have indicated they might want more rule sets in the future.
+            switch (ruleset)
+            {
+                case Rulesets.Relaxed:
+                    {
+                        bool relaxedEmployeeOverfill = Passengers.Count(p => p is AirlineEmployee) / (double)Aircraft.NumberOfSeats > FlightRoute.MinimumTakeOffPercentage;
+                        //(if the number of airline employees aboard is greater than the minimum percentage of passengers required, then the revenue generated doesn’t need to exceed cost)
+                        result = seatsAvailable && minimumPassengersReached && (profitable || relaxedEmployeeOverfill);
+                        break;
+                    }
+                default:
+                    {
+                        result = seatsAvailable && minimumPassengersReached && profitable;
+                        break;
+                    }
+            }
+
+            return result;
         }
     }
 }
