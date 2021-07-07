@@ -5,16 +5,21 @@
         public string Name { get; set; }
         public int Age { get; set; }
         public int AllowedBags { get; set; }
+    }
+
+    public class General : Passenger
+    {
+
+    }
+
+    public class Loyalty : Passenger
+    {
         public int LoyaltyPoints { get; set; }
         public bool IsUsingLoyaltyPoints { get; set; }
-
-        public PassengerType Type { get; set; }
     }
-    
-    public enum PassengerType
+
+    public class AirlineEmployee : Passenger
     {
-        General,
-        LoyaltyMember,
-        AirlineEmployee
+
     }
 }

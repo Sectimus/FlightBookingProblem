@@ -43,20 +43,20 @@ namespace FlightBooking.Core
 
             foreach (var passenger in Passengers)
             {
-                switch (passenger.Type)
+                switch (passenger)
                 {
-                    case(PassengerType.General):
+                    case General p:
                         {
                             profitFromFlight += FlightRoute.BasePrice;
                             totalExpectedBaggage++;
                             break;
                         }
-                    case(PassengerType.LoyaltyMember):
+                    case Loyalty p:
                         {
-                            if (passenger.IsUsingLoyaltyPoints)
+                            if (p.IsUsingLoyaltyPoints)
                             {
                                 int loyaltyPointsRedeemed = Convert.ToInt32(Math.Ceiling(FlightRoute.BasePrice));
-                                passenger.LoyaltyPoints -= loyaltyPointsRedeemed;
+                                p.LoyaltyPoints -= loyaltyPointsRedeemed;
                                 totalLoyaltyPointsRedeemed += loyaltyPointsRedeemed;
                             }
                             else
@@ -67,7 +67,7 @@ namespace FlightBooking.Core
                             totalExpectedBaggage += 2;
                             break;
                         }
-                    case(PassengerType.AirlineEmployee):
+                    case AirlineEmployee p:
                         {
                             totalExpectedBaggage += 1;
                             break;
@@ -81,11 +81,11 @@ namespace FlightBooking.Core
             
             result += "Total passengers: " + seatsTaken;
             result += NEW_LINE;
-            result += INDENTATION + "General sales: " + Passengers.Count(p => p.Type == PassengerType.General);
+            result += INDENTATION + "General sales: " + Passengers.Count(p => p is General);
             result += NEW_LINE;
-            result += INDENTATION + "Loyalty member sales: " + Passengers.Count(p => p.Type == PassengerType.LoyaltyMember);
+            result += INDENTATION + "Loyalty member sales: " + Passengers.Count(p => p is Loyalty);
             result += NEW_LINE;
-            result += INDENTATION + "Airline employee comps: " + Passengers.Count(p => p.Type == PassengerType.AirlineEmployee);
+            result += INDENTATION + "Airline employee comps: " + Passengers.Count(p => p is AirlineEmployee);
             
             result += VERTICAL_WHITE_SPACE;
             result += "Total expected baggage: " + totalExpectedBaggage;
