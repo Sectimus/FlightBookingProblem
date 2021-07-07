@@ -3,16 +3,16 @@
     public abstract class Passenger
     {
         //properties
-        public string name { get; set; }
-        public int age { get; set; } // -1 age indicates none was given
-        public int allowedBags { get; protected set;}
+        public string Name { get; set; }
+        public int Age { get; set; } // -1 age indicates none was given
+        public int AllowedBags { get; protected set;}
 
         //constructors
         public Passenger(string name = "N/A", int age = -1)
         {
-            this.name = name;
-            this.age = age;
-            this.allowedBags = 1;
+            this.Name = name;
+            this.Age = age;
+            this.AllowedBags = 1;
         }
     }
 
@@ -26,17 +26,17 @@
     public class Loyalty : Passenger
     {
         //properties
-        public int loyaltyPoints { get; set; }
-        public bool isUsingLoyaltyPoints { get; set; }
+        public int LoyaltyPoints { get; set; }
+        public bool IsUsingLoyaltyPoints { get; set; }
 
         //constructors
         public Loyalty(string name, int age, int loyaltyPoints = 0, bool isUsingLoyaltyPoints = false) : base(name, age)
         {
-            this.loyaltyPoints = loyaltyPoints;
-            this.isUsingLoyaltyPoints = isUsingLoyaltyPoints;
+            this.LoyaltyPoints = loyaltyPoints;
+            this.IsUsingLoyaltyPoints = isUsingLoyaltyPoints;
         }
         public Loyalty() : base() {
-            base.allowedBags = 2; //loyalty passengers are allowed an additional bag
+            base.AllowedBags = 2; //loyalty passengers are allowed an additional bag
         }
     }
 
@@ -52,7 +52,7 @@
         //constructors
         public Discounted(string name, int age) : base(name, age) { }
         public Discounted() : base() {
-            base.allowedBags = 0; //discounted passengers are not allowed any bags
+            base.AllowedBags = 0; //discounted passengers are not allowed any bags
         }
     }
 }

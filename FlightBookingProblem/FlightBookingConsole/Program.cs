@@ -30,8 +30,8 @@ namespace FlightBookingProblem
                                     {
                                         p = new General
                                         {
-                                            name = command[2],
-                                            age = Convert.ToInt32(command[3])
+                                            Name = command[2],
+                                            Age = Convert.ToInt32(command[3])
                                         };
                                         break;
                                     }
@@ -39,10 +39,10 @@ namespace FlightBookingProblem
                                     {
                                         p = new Loyalty
                                         {
-                                            name = command[2],
-                                            age = Convert.ToInt32(command[3]),
-                                            loyaltyPoints = Convert.ToInt32(command[4]),
-                                            isUsingLoyaltyPoints = Convert.ToBoolean(command[5]),
+                                            Name = command[2],
+                                            Age = Convert.ToInt32(command[3]),
+                                            LoyaltyPoints = Convert.ToInt32(command[4]),
+                                            IsUsingLoyaltyPoints = Convert.ToBoolean(command[5]),
                                         };
                                         break;
                                     }
@@ -50,8 +50,8 @@ namespace FlightBookingProblem
                                     {
                                         p = new AirlineEmployee
                                         {
-                                            name = command[2],
-                                            age = Convert.ToInt32(command[3])
+                                            Name = command[2],
+                                            Age = Convert.ToInt32(command[3])
                                         };
                                         break;
                                     }
@@ -59,8 +59,8 @@ namespace FlightBookingProblem
                                     {
                                         p = new Discounted
                                         {
-                                            name = command[2],
-                                            age = Convert.ToInt32(command[3])
+                                            Name = command[2],
+                                            Age = Convert.ToInt32(command[3])
                                         };
                                         break;
                                     }

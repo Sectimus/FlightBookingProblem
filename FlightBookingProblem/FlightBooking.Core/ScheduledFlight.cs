@@ -17,13 +17,13 @@ namespace FlightBooking.Core
         {
             FlightRoute = flightRoute;
             Passengers = new List<Passenger>();
-            this.ruleset = ruleset;
+            this.FlightRule = ruleset;
         }
 
-        public Ruleset ruleset { get; set; }
+        public Ruleset FlightRule { get; set; }
         public FlightRoute FlightRoute { get; private set; }
         public Plane Aircraft { get; private set; }
-        public List<Plane> alternativeAircraft { get; private set; }
+        public List<Plane> AlternativeAircraft { get; private set; }
         public List<Passenger> Passengers { get; private set; }
 
         public void AddPassenger(Passenger passenger)
@@ -35,8 +35,8 @@ namespace FlightBooking.Core
         {
             Aircraft = aircraft;
             //check for default null value to init a 0 len array as a default param
-            this.alternativeAircraft = new List<Plane>();
-            this.alternativeAircraft.AddRange(alternatives != null ? alternatives : new Plane[0]);
+            this.AlternativeAircraft = new List<Plane>();
+            this.AlternativeAircraft.AddRange(alternatives != null ? alternatives : new Plane[0]);
         }
         
         //returns a string of the flight summary
@@ -60,10 +60,10 @@ namespace FlightBooking.Core
                         }
                     case Loyalty p:
                         {
-                            if (p.isUsingLoyaltyPoints)
+                            if (p.IsUsingLoyaltyPoints)
                             {
                                 int loyaltyPointsRedeemed = Convert.ToInt32(Math.Ceiling(FlightRoute.BasePrice));
-                                p.loyaltyPoints -= loyaltyPointsRedeemed;
+                                p.LoyaltyPoints -= loyaltyPointsRedeemed;
                                 totalLoyaltyPointsRedeemed += loyaltyPointsRedeemed;
                             }
                             else
@@ -81,25 +81,25 @@ namespace FlightBooking.Core
                 }
                 costOfFlight += FlightRoute.BaseCost;
                 seatsTaken++;
-                totalExpectedBaggage += passenger.allowedBags;
+                totalExpectedBaggage += passenger.AllowedBags;
             }
 
             //prequesite values 
             double profitSurplus = profitFromFlight - costOfFlight;
-            bool flightRulesetMet = meetsFlightRuleset(profitSurplus, seatsTaken, this.ruleset);
+            bool flightRulesetMet = meetsFlightRuleset(profitSurplus, seatsTaken, this.FlightRule);
             if (!flightRulesetMet) //check if alternative aircraft is needed
             {
-                for (int i = alternativeAircraft.Count-1; i >=0; i--)
+                for (int i = AlternativeAircraft.Count-1; i >=0; i--)
                 {
-                    if (!meetsFlightRuleset(profitSurplus, seatsTaken, this.ruleset, alternativeAircraft[i]))
+                    if (!meetsFlightRuleset(profitSurplus, seatsTaken, this.FlightRule, AlternativeAircraft[i]))
                     {
-                        alternativeAircraft.RemoveAt(i);
+                        AlternativeAircraft.RemoveAt(i);
                     }
                 }
             }
 
             //result formatting
-                StringBuilder result = new StringBuilder("Flight summary for " + FlightRoute.Title);
+            StringBuilder result = new StringBuilder("Flight summary for " + FlightRoute.Title);
             int indentationLevel = 4;
 
             result.AppendLine()
@@ -121,10 +121,10 @@ namespace FlightBooking.Core
                 .AppendLine(flightRulesetMet ? "THIS FLIGHT MAY PROCEED" : "THIS FLIGHT MAY NOT PROCEED");
 
             //append alternatives if needed
-            if (!flightRulesetMet && alternativeAircraft.Count > 0)
+            if (!flightRulesetMet && AlternativeAircraft.Count > 0)
             {
                 result.AppendLine("Other more suitable aircraft are: ");
-                foreach (var alternative in alternativeAircraft)
+                foreach (var alternative in AlternativeAircraft)
                 {
                     result.AppendLine(alternative.Name+" could handle this flight.");
                 }
