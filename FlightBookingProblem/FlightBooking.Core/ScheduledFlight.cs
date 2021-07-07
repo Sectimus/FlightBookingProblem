@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text;
 
 namespace FlightBooking.Core
 {
@@ -30,6 +31,7 @@ namespace FlightBooking.Core
             Aircraft = aircraft;
         }
         
+        //returns a string of the flight summary
         public string GetSummary()
         {
             double costOfFlight = 0;
@@ -38,8 +40,6 @@ namespace FlightBooking.Core
             int totalLoyaltyPointsRedeemed = 0;
             int totalExpectedBaggage = 0;
             int seatsTaken = 0;
-
-            string result = "Flight summary for " + FlightRoute.Title;
 
             foreach (var passenger in Passengers)
             {
@@ -77,45 +77,32 @@ namespace FlightBooking.Core
                 seatsTaken++;
             }
 
-            result += VERTICAL_WHITE_SPACE;
-            
-            result += "Total passengers: " + seatsTaken;
-            result += NEW_LINE;
-            result += INDENTATION + "General sales: " + Passengers.Count(p => p is General);
-            result += NEW_LINE;
-            result += INDENTATION + "Loyalty member sales: " + Passengers.Count(p => p is Loyalty);
-            result += NEW_LINE;
-            result += INDENTATION + "Airline employee comps: " + Passengers.Count(p => p is AirlineEmployee);
-            
-            result += VERTICAL_WHITE_SPACE;
-            result += "Total expected baggage: " + totalExpectedBaggage;
-
-            result += VERTICAL_WHITE_SPACE;
-
-            result += "Total revenue from flight: " + profitFromFlight;
-            result += NEW_LINE;
-            result += "Total costs from flight: " + costOfFlight;
-            result += NEW_LINE;
-
+            //prequesite values 
             double profitSurplus = profitFromFlight - costOfFlight;
+            bool proceed = profitSurplus > 0 && seatsTaken < Aircraft.NumberOfSeats && seatsTaken / (double)Aircraft.NumberOfSeats > FlightRoute.MinimumTakeOffPercentage;
 
-            result += (profitSurplus > 0 ? "Flight generating profit of: " : "Flight losing money of: ") + profitSurplus;
+            //result formatting
+            StringBuilder result = new StringBuilder("Flight summary for " + FlightRoute.Title);
+            int indentationLevel = 4;
 
-            result += VERTICAL_WHITE_SPACE;
+            result.AppendLine()
+                .AppendLine("Total passengers: " + seatsTaken)
+                .Append(' ', indentationLevel).AppendLine("General sales: " + Passengers.Count(p => p is General))
+                .Append(' ', indentationLevel).AppendLine("Loyalty member sales: " + Passengers.Count(p => p is Loyalty))
+                .Append(' ', indentationLevel).AppendLine("Airline employee comps: " + Passengers.Count(p => p is AirlineEmployee))
+                .AppendLine()
+                .AppendLine("Total expected baggage: " + totalExpectedBaggage)
+                .AppendLine()
+                .AppendLine("Total revenue from flight: " + profitFromFlight)
+                .AppendLine("Total costs from flight: " + costOfFlight)
+                .AppendLine((profitSurplus > 0 ? "Flight generating profit of: " : "Flight losing money of: ") + profitSurplus)
+                .AppendLine()
+                .AppendLine("Total loyalty points given away: " + totalLoyaltyPointsAccrued)
+                .AppendLine("Total loyalty points redeemed: " + totalLoyaltyPointsRedeemed)
+                .AppendLine()
+                .Append(proceed ? "THIS FLIGHT MAY PROCEED" : "FLIGHT MAY NOT PROCEED");
 
-            result += "Total loyalty points given away: " + totalLoyaltyPointsAccrued + NEW_LINE;
-            result += "Total loyalty points redeemed: " + totalLoyaltyPointsRedeemed + NEW_LINE;
-
-            result += VERTICAL_WHITE_SPACE;
-
-            if (profitSurplus > 0 && 
-                seatsTaken < Aircraft.NumberOfSeats && 
-                seatsTaken / (double)Aircraft.NumberOfSeats > FlightRoute.MinimumTakeOffPercentage)
-                result += "THIS FLIGHT MAY PROCEED";
-            else
-                result += "FLIGHT MAY NOT PROCEED";
-
-            return result;
+            return result.ToString();
         }
     }
 }
