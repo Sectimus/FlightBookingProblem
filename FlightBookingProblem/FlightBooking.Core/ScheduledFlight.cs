@@ -61,11 +61,6 @@ namespace FlightBooking.Core
                             }
                             break;
                         }
-                    case AirlineEmployee p:
-                        {
-                            //todo
-                            break;
-                        }
                 }
                 costOfFlight += FlightRoute.BaseCost;
                 seatsTaken++;
