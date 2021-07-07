@@ -48,7 +48,6 @@ namespace FlightBooking.Core
                     case General p:
                         {
                             profitFromFlight += FlightRoute.BasePrice;
-                            totalExpectedBaggage++;
                             break;
                         }
                     case Loyalty p:
@@ -64,17 +63,20 @@ namespace FlightBooking.Core
                                 totalLoyaltyPointsAccrued += FlightRoute.LoyaltyPointsGained;
                                 profitFromFlight += FlightRoute.BasePrice;                           
                             }
-                            totalExpectedBaggage += 2;
+                            //1 extra bag allowed for a loyalty member
+                            totalExpectedBaggage++;
                             break;
                         }
                     case AirlineEmployee p:
                         {
-                            totalExpectedBaggage += 1;
+                            //todo
                             break;
                         }
                 }
                 costOfFlight += FlightRoute.BaseCost;
                 seatsTaken++;
+                //default baggage of 1
+                totalExpectedBaggage++;
             }
 
             //prequesite values 
