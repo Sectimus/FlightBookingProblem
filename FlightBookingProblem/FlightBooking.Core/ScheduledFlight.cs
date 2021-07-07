@@ -12,7 +12,6 @@ namespace FlightBooking.Core
             Default,
             Relaxed
         }
-        public Ruleset ruleset { get; set; }
 
         public ScheduledFlight(FlightRoute flightRoute, Ruleset ruleset = Ruleset.Default)
         {
@@ -21,8 +20,10 @@ namespace FlightBooking.Core
             this.ruleset = ruleset;
         }
 
+        public Ruleset ruleset { get; set; }
         public FlightRoute FlightRoute { get; private set; }
         public Plane Aircraft { get; private set; }
+        public List<Plane> alternativeAircraft { get; private set; }
         public List<Passenger> Passengers { get; private set; }
 
         public void AddPassenger(Passenger passenger)
@@ -30,9 +31,12 @@ namespace FlightBooking.Core
             Passengers.Add(passenger);
         }
 
-        public void SetAircraftForRoute(Plane aircraft)
+        public void SetAircraftForRoute(Plane aircraft, Plane[] alternatives = null)
         {
             Aircraft = aircraft;
+            //check for default null value to init a 0 len array as a default param
+            this.alternativeAircraft = new List<Plane>();
+            this.alternativeAircraft.AddRange(alternatives != null ? alternatives : new Plane[0]);
         }
         
         //returns a string of the flight summary
@@ -82,9 +86,20 @@ namespace FlightBooking.Core
 
             //prequesite values 
             double profitSurplus = profitFromFlight - costOfFlight;
+            bool flightRulesetMet = meetsFlightRuleset(profitSurplus, seatsTaken, this.ruleset);
+            if (!flightRulesetMet) //check if alternative aircraft is needed
+            {
+                for (int i = alternativeAircraft.Count-1; i >=0; i--)
+                {
+                    if (!meetsFlightRuleset(profitSurplus, seatsTaken, this.ruleset, alternativeAircraft[i]))
+                    {
+                        alternativeAircraft.RemoveAt(i);
+                    }
+                }
+            }
 
             //result formatting
-            StringBuilder result = new StringBuilder("Flight summary for " + FlightRoute.Title);
+                StringBuilder result = new StringBuilder("Flight summary for " + FlightRoute.Title);
             int indentationLevel = 4;
 
             result.AppendLine()
@@ -103,17 +118,30 @@ namespace FlightBooking.Core
                 .AppendLine("Total loyalty points given away: " + totalLoyaltyPointsAccrued)
                 .AppendLine("Total loyalty points redeemed: " + totalLoyaltyPointsRedeemed)
                 .AppendLine()
-                .Append(meetsFlightRuleset(profitSurplus, seatsTaken, this.ruleset) ? "THIS FLIGHT MAY PROCEED" : "FLIGHT MAY NOT PROCEED");
-            
+                .AppendLine(flightRulesetMet ? "THIS FLIGHT MAY PROCEED" : "THIS FLIGHT MAY NOT PROCEED");
+
+            //append alternatives if needed
+            if (!flightRulesetMet && alternativeAircraft.Count > 0)
+            {
+                result.AppendLine("Other more suitable aircraft are: ");
+                foreach (var alternative in alternativeAircraft)
+                {
+                    result.AppendLine(alternative.Name+" could handle this flight.");
+                }
+            }
+
+
             return result.ToString();
         }
 
 
-        private bool meetsFlightRuleset(double profitSurplus, int seatsTaken, Ruleset ruleset = Ruleset.Default)
+        private bool meetsFlightRuleset(double profitSurplus, int seatsTaken, Ruleset ruleset = Ruleset.Default, Plane _aircraft = null)
         {
+            //check if looking for alternative aircraft requirements
+            _aircraft = _aircraft != null ? _aircraft : Aircraft;
             bool profitable = profitSurplus > 0; //the revenue generated from the flight must exceed the cost of the flight 
-            bool seatsAvailable = seatsTaken < Aircraft.NumberOfSeats; //the number of passengers cannot exceed the amount of seats on the plane
-            bool minimumPassengersReached = seatsTaken / (double)Aircraft.NumberOfSeats > FlightRoute.MinimumTakeOffPercentage; //the aircraft must have a minimum percentage of passengers booked for that route
+            bool seatsAvailable = seatsTaken < _aircraft.NumberOfSeats; //the number of passengers cannot exceed the amount of seats on the plane
+            bool minimumPassengersReached = seatsTaken / (double)_aircraft.NumberOfSeats > FlightRoute.MinimumTakeOffPercentage; //the aircraft must have a minimum percentage of passengers booked for that route
 
             bool result = false;
             //They have indicated they might want more rule sets in the future.
@@ -121,7 +149,7 @@ namespace FlightBooking.Core
             {
                 case Ruleset.Relaxed:
                     {
-                        bool relaxedEmployeeOverfill = Passengers.Count(p => p is AirlineEmployee) / (double)Aircraft.NumberOfSeats > FlightRoute.MinimumTakeOffPercentage;
+                        bool relaxedEmployeeOverfill = Passengers.Count(p => p is AirlineEmployee) / (double)_aircraft.NumberOfSeats > FlightRoute.MinimumTakeOffPercentage;
                         //(if the number of airline employees aboard is greater than the minimum percentage of passengers required, then the revenue generated doesn’t need to exceed cost)
                         result = seatsAvailable && minimumPassengersReached && (profitable || relaxedEmployeeOverfill);
                         break;

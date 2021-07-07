@@ -22,7 +22,7 @@ namespace FlightBookingProblem
                 {
                     case "add":
                         {
-                            Passenger p = default(Passenger);
+                            Passenger p = null;
                             //section command section (ex. add *general* ...)
                             switch (command[1])
                             {
@@ -131,7 +131,13 @@ namespace FlightBookingProblem
             _scheduledFlight = new ScheduledFlight(londonToParis, ScheduledFlight.Ruleset.Relaxed);
 
             _scheduledFlight.SetAircraftForRoute(
-                new Plane { Id = 123, Name = "Antonov AN-2", NumberOfSeats = 12 });
+                aircraft:new Plane { Id = 123, Name = "Antonov AN-2", NumberOfSeats = 12 },
+                alternatives:new Plane[] 
+                {
+                    new Plane { Id = 456, Name = "Dornier 328", NumberOfSeats = 24 },
+                    new Plane { Id = 789, Name = "Dash 8-100", NumberOfSeats = 37 }
+                }
+            );
         }
     }
 }
