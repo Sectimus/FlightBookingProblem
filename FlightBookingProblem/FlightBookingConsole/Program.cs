@@ -10,66 +10,110 @@ namespace FlightBookingProblem
         static void Main(string[] args)
         {
             SetupAirlineData();
-            
-            string command = "";
+
+            string[] command;
             do
             {
-                command = Console.ReadLine() ?? "";
-                var enteredText = command.ToLower();
-                if (enteredText.Contains("print summary"))
+                string enteredText = Console.ReadLine() ?? "";
+                command = enteredText.ToLower().Split(' ');
+
+                //first command section (ex. *add* general ...)
+                switch (command[0])
                 {
-                    Console.WriteLine();
-                    Console.WriteLine(_scheduledFlight.GetSummary());
+                    case "add":
+                        {
+                            //section command section (ex. add *general* ...)
+                            switch (command[1])
+                            {
+                                case "general":
+                                    {
+                                        General p = new General
+                                        {
+                                            name = command[2],
+                                            age = Convert.ToInt32(command[3])
+                                        };
+                                        break;
+                                    }
+                                case "loyalty":
+                                    {
+                                        Loyalty p = new Loyalty
+                                        {
+                                            name = command[2],
+                                            age = Convert.ToInt32(command[3]),
+                                            loyaltyPoints = Convert.ToInt32(command[4]),
+                                            isUsingLoyaltyPoints = Convert.ToBoolean(command[5]),
+                                        };
+                                        break;
+                                    }
+                                case "airline":
+                                    {
+                                        AirlineEmployee p = new AirlineEmployee
+                                        {
+                                            name = command[2],
+                                            age = Convert.ToInt32(command[3])
+                                        };
+                                        break;
+                                    }
+                                case "discount":
+                                    {
+                                        Discounted p = new Discounted
+                                        {
+                                            name = command[2],
+                                            age = Convert.ToInt32(command[3])
+                                        };
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        DisplayUnknownCommand(command[1], command[0]);
+                                        break;
+                                    }
+                            }
+                            break;
+                        }
+                    //provides expansion for printing other values
+                    case "print":
+                        {
+                            //section command section (ex. print *summary* ...)
+                            switch (command[1])
+                            {
+                                case "summary":
+                                    {
+                                        Console.WriteLine();
+                                        Console.WriteLine(_scheduledFlight.GetSummary());
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        DisplayUnknownCommand(command[1], command[0]);
+                                        break;
+                                    }
+                            }
+                            break;
+                        }
+                    case "exit":
+                        {
+                            Environment.Exit(1);
+                            break;
+                        }
+                    default:
+                        {
+                            DisplayUnknownCommand(command[0]);
+                            break;
+                        }
                 }
-                else if (enteredText.Contains("add general"))
-                {
-                    string[] passengerSegments = enteredText.Split(' ');
-                    _scheduledFlight.AddPassenger(new General
-                    {
-                        name = passengerSegments[2], 
-                        age = Convert.ToInt32(passengerSegments[3])
-                    });
-                }
-                else if (enteredText.Contains("add loyalty"))
-                {
-                    string[] passengerSegments = enteredText.Split(' ');
-                    _scheduledFlight.AddPassenger(new Loyalty
-                    {
-                        name = passengerSegments[2], 
-                        age = Convert.ToInt32(passengerSegments[3]),
-                        loyaltyPoints = Convert.ToInt32(passengerSegments[4]),
-                        isUsingLoyaltyPoints = Convert.ToBoolean(passengerSegments[5]),
-                    });
-                }
-                else if (enteredText.Contains("add airline"))
-                {
-                    string[] passengerSegments = enteredText.Split(' ');
-                    _scheduledFlight.AddPassenger(new AirlineEmployee
-                    {
-                        name = passengerSegments[2],
-                        age = Convert.ToInt32(passengerSegments[3]),
-                    });
-                }
-                else if (enteredText.Contains("add discount"))
-                {
-                    string[] passengerSegments = enteredText.Split(' ');
-                    _scheduledFlight.AddPassenger(new Discounted
-                    {
-                        name = passengerSegments[2],
-                        age = Convert.ToInt32(passengerSegments[3])
-                    });
-                }
-                else if (enteredText.Contains("exit"))
-                {
-                    Environment.Exit(1);
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("UNKNOWN INPUT");
-                    Console.ResetColor();
-                }
-            } while (command != "exit");
+            } while (command[0] != "exit");
+        }
+
+        private static void DisplayUnknownCommand(string unknown, string known = "")
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("UNKNOWN COMMAND: ");
+            Console.ResetColor();
+            Console.Write(known+" ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(unknown);
+            Console.ResetColor();
         }
 
         private static void SetupAirlineData()
