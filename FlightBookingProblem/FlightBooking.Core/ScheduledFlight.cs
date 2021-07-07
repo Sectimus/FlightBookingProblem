@@ -7,10 +7,6 @@ namespace FlightBooking.Core
 {
     public class ScheduledFlight
     {
-        private readonly string VERTICAL_WHITE_SPACE = Environment.NewLine + Environment.NewLine;
-        private readonly string NEW_LINE = Environment.NewLine;
-        private const string INDENTATION = "    ";
-
         public ScheduledFlight(FlightRoute flightRoute)
         {
             FlightRoute = flightRoute;
