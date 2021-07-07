@@ -52,10 +52,10 @@ namespace FlightBooking.Core
                         }
                     case Loyalty p:
                         {
-                            if (p.IsUsingLoyaltyPoints)
+                            if (p.isUsingLoyaltyPoints)
                             {
                                 int loyaltyPointsRedeemed = Convert.ToInt32(Math.Ceiling(FlightRoute.BasePrice));
-                                p.LoyaltyPoints -= loyaltyPointsRedeemed;
+                                p.loyaltyPoints -= loyaltyPointsRedeemed;
                                 totalLoyaltyPointsRedeemed += loyaltyPointsRedeemed;
                             }
                             else
@@ -63,8 +63,6 @@ namespace FlightBooking.Core
                                 totalLoyaltyPointsAccrued += FlightRoute.LoyaltyPointsGained;
                                 profitFromFlight += FlightRoute.BasePrice;                           
                             }
-                            //1 extra bag allowed for a loyalty member
-                            totalExpectedBaggage++;
                             break;
                         }
                     case AirlineEmployee p:
@@ -75,8 +73,7 @@ namespace FlightBooking.Core
                 }
                 costOfFlight += FlightRoute.BaseCost;
                 seatsTaken++;
-                //default baggage of 1
-                totalExpectedBaggage++;
+                totalExpectedBaggage += passenger.allowedBags;
             }
 
             //prequesite values 

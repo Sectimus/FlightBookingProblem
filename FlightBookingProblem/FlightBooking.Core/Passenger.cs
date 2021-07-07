@@ -1,25 +1,49 @@
 ﻿namespace FlightBooking.Core
 {
-    public class Passenger
+    public abstract class Passenger
     {
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public int AllowedBags { get; set; }
+        //properties
+        public string name { get; set; }
+        public int age { get; set; } // -1 age indicates none was given
+        public int allowedBags { get; protected set;}
+
+        //constructors
+        public Passenger(string name = "N/A", int age = -1)
+        {
+            this.name = name;
+            this.age = age;
+            this.allowedBags = 1;
+        }
     }
 
     public class General : Passenger
     {
-
+        //constructors
+        public General(string name, int age) : base(name, age) { }
+        public General() : base() { }
     }
 
     public class Loyalty : Passenger
     {
-        public int LoyaltyPoints { get; set; }
-        public bool IsUsingLoyaltyPoints { get; set; }
+        //properties
+        public int loyaltyPoints { get; set; }
+        public bool isUsingLoyaltyPoints { get; set; }
+
+        //constructors
+        public Loyalty(string name, int age, int loyaltyPoints = 0, bool isUsingLoyaltyPoints = false) : base(name, age)
+        {
+            this.loyaltyPoints = loyaltyPoints;
+            this.isUsingLoyaltyPoints = isUsingLoyaltyPoints;
+        }
+        public Loyalty() : base() {
+            base.allowedBags = 2;
+        }
     }
 
     public class AirlineEmployee : Passenger
     {
-
+        //constructors
+        public AirlineEmployee(string name, int age) : base(name, age) { }
+        public AirlineEmployee() : base() { }
     }
 }

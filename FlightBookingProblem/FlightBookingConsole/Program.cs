@@ -26,8 +26,8 @@ namespace FlightBookingProblem
                     string[] passengerSegments = enteredText.Split(' ');
                     _scheduledFlight.AddPassenger(new General
                     {
-                        Name = passengerSegments[2], 
-                        Age = Convert.ToInt32(passengerSegments[3])
+                        name = passengerSegments[2], 
+                        age = Convert.ToInt32(passengerSegments[3])
                     });
                 }
                 else if (enteredText.Contains("add loyalty"))
@@ -35,10 +35,10 @@ namespace FlightBookingProblem
                     string[] passengerSegments = enteredText.Split(' ');
                     _scheduledFlight.AddPassenger(new Loyalty
                     {
-                        Name = passengerSegments[2], 
-                        Age = Convert.ToInt32(passengerSegments[3]),
-                        LoyaltyPoints = Convert.ToInt32(passengerSegments[4]),
-                        IsUsingLoyaltyPoints = Convert.ToBoolean(passengerSegments[5]),
+                        name = passengerSegments[2], 
+                        age = Convert.ToInt32(passengerSegments[3]),
+                        loyaltyPoints = Convert.ToInt32(passengerSegments[4]),
+                        isUsingLoyaltyPoints = Convert.ToBoolean(passengerSegments[5]),
                     });
                 }
                 else if (enteredText.Contains("add airline"))
@@ -46,8 +46,8 @@ namespace FlightBookingProblem
                     string[] passengerSegments = enteredText.Split(' ');
                     _scheduledFlight.AddPassenger(new AirlineEmployee
                     {
-                        Name = passengerSegments[2], 
-                        Age = Convert.ToInt32(passengerSegments[3]),
+                        name = passengerSegments[2], 
+                        age = Convert.ToInt32(passengerSegments[3]),
                     });
                 }
                 else if (enteredText.Contains("exit"))
