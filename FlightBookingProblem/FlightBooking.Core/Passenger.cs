@@ -16,6 +16,9 @@
         }
     }
 
+    /// <summary>
+    /// General - Normal fare paying passengers.
+    /// </summary>
     public class General : Passenger
     {
         //constructors
@@ -23,6 +26,9 @@
         public General() : base() { }
     }
 
+    /// <summary>
+    /// Loyalty Members – Repeat customers who get benefits for choosing to fly with the airline.
+    /// </summary>
     public class Loyalty : Passenger
     {
         //properties
@@ -40,6 +46,9 @@
         }
     }
 
+    /// <summary>
+    /// Airline Employee – Employees of the airline who fly for free as a perk.
+    /// </summary>
     public class AirlineEmployee : Passenger
     {
         //constructors
@@ -47,6 +56,9 @@
         public AirlineEmployee() : base() { }
     }
 
+    /// <summary>
+    /// Discounted - General Passengers that don't accrue loyalty points and are not allowed a bag; however are only charged half the normal rate.
+    /// </summary>
     public class Discounted : Passenger
     {
         //constructors

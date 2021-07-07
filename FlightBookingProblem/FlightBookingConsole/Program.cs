@@ -5,11 +5,11 @@ namespace FlightBookingProblem
 {
     class Program
     {
-        private static ScheduledFlight _scheduledFlight ;
+        private static ScheduledFlight _scheduledFlight;
 
         static void Main(string[] args)
         {
-            SetupAirlineData();
+            SetupAirlineData(); //AirlineData is currently hardcoded, however can be modified to work dynamically.
 
             string[] command;
             do
@@ -107,6 +107,11 @@ namespace FlightBookingProblem
             } while (command[0] != "exit");
         }
 
+        /// <summary>
+        /// Prints the string entered with the unknown command highlighted.
+        /// </summary>
+        /// <param name="unknown">The last unknown command</param>
+        /// <param name="known">All previously known commands</param>
         private static void DisplayUnknownCommand(string unknown, string known = "")
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -118,6 +123,9 @@ namespace FlightBookingProblem
             Console.ResetColor();
         }
 
+        /// <summary>
+        /// Schedules a test flight with hardcoded values.
+        /// </summary>
         private static void SetupAirlineData()
         {
             FlightRoute londonToParis = new FlightRoute("London", "Paris")

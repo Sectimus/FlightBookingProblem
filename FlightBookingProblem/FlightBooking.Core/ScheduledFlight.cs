@@ -7,12 +7,20 @@ namespace FlightBooking.Core
 {
     public class ScheduledFlight
     {
+        /// <summary>
+        /// Defines the ruleset used for determining if a flight will depart.
+        /// </summary>
         public enum Ruleset
         {
             Default,
             Relaxed
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScheduledFlight{T}"/> class.
+        /// </summary>
+        /// <param name="flightRoute">The route this flight is scheduled to take.</param>
+        /// <param name="ruleset">The Ruleset chosen to determine if this flight will depart.</param>
         public ScheduledFlight(FlightRoute flightRoute, Ruleset ruleset = Ruleset.Default)
         {
             FlightRoute = flightRoute;
@@ -26,11 +34,20 @@ namespace FlightBooking.Core
         public List<Plane> AlternativeAircraft { get; private set; }
         public List<Passenger> Passengers { get; private set; }
 
+        /// <summary>
+        /// Adds a passenger to the flight.
+        /// </summary>
+        /// <param name="passenger">The passenger to be added to the flight.</param>
         public void AddPassenger(Passenger passenger)
         {
             Passengers.Add(passenger);
         }
 
+        /// <summary>
+        /// Sets the aircraft for the route. Also optionally sets any alternative aircraft that can perform this route.
+        /// </summary>
+        /// <param name="aircraft">The primary plane for this scheduled flight.</param>
+        /// <param name="alternatives">An array of alternative planes that can perform this route.</param>
         public void SetAircraftForRoute(Plane aircraft, Plane[] alternatives = null)
         {
             Aircraft = aircraft;
@@ -38,8 +55,11 @@ namespace FlightBooking.Core
             this.AlternativeAircraft = new List<Plane>();
             this.AlternativeAircraft.AddRange(alternatives != null ? alternatives : new Plane[0]);
         }
-        
-        //returns a string of the flight summary
+
+        /// <summary>
+        /// Provides a summary of the scheduled flight.
+        /// </summary>
+        /// <returns>returns a string of the flight summary.</returns>
         public string GetSummary()
         {
             double costOfFlight = 0;
@@ -134,7 +154,14 @@ namespace FlightBooking.Core
             return result.ToString();
         }
 
-
+        /// <summary>
+        /// Checks if the <see cref="ScheduledFlight{T}"/> configuration can depart.
+        /// </summary>
+        /// <param name="profitSurplus">A positive or negative value of the deviation from the cost</param>
+        /// <param name="seatsTaken">The number of seats that are filled on the <see cref="Aircraft{T}"/>.</param>
+        /// <param name="ruleset">The set of rules used to determine if a flight will depart.</param>
+        /// <param name="_aircraft">An alternative <see cref="Aircraft{T}"/> to check against a <see cref="Ruleset"/>.</param>
+        /// <returns></returns>
         private bool meetsFlightRuleset(double profitSurplus, int seatsTaken, Ruleset ruleset = Ruleset.Default, Plane _aircraft = null)
         {
             //check if looking for alternative aircraft requirements
