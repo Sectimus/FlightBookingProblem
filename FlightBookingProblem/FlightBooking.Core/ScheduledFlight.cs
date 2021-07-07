@@ -61,6 +61,11 @@ namespace FlightBooking.Core
                             }
                             break;
                         }
+                    case Discounted p:
+                        {
+                            profitFromFlight += FlightRoute.BasePrice/2; //discounted passengers are only charged half the normal base price for the route
+                            break;
+                        }
                 }
                 costOfFlight += FlightRoute.BaseCost;
                 seatsTaken++;
@@ -80,6 +85,7 @@ namespace FlightBooking.Core
                 .Append(' ', indentationLevel).AppendLine("General sales: " + Passengers.Count(p => p is General))
                 .Append(' ', indentationLevel).AppendLine("Loyalty member sales: " + Passengers.Count(p => p is Loyalty))
                 .Append(' ', indentationLevel).AppendLine("Airline employee comps: " + Passengers.Count(p => p is AirlineEmployee))
+                .Append(' ', indentationLevel).AppendLine("Discounted sales: " + Passengers.Count(p => p is Discounted))
                 .AppendLine()
                 .AppendLine("Total expected baggage: " + totalExpectedBaggage)
                 .AppendLine()
